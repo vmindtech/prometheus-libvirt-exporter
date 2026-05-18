@@ -25,11 +25,11 @@ func TestUnmarshal(t *testing.T) {
 		str = `
 <domain type='kvm'>
   <name>instance-00000212</name>
-  <uuid>a6b57d2e-dad0-4860-9104-6eb072935126</uuid>
+  <uuid>00000000-0000-4000-8000-000000000001</uuid>
   <metadata>
     <nova:instance xmlns:nova="http://openstack.org/xmlns/libvirt/nova/1.0">
       <nova:package version="15.0.4-1.el7"/>
-      <nova:name>LqnyzNfe</nova:name>
+      <nova:name>example-vm</nova:name>
       <nova:creationTime>2018-04-23 07:08:32</nova:creationTime>
       <nova:flavor name="c1.micro">
         <nova:memory>1024</nova:memory>
@@ -40,9 +40,9 @@ func TestUnmarshal(t *testing.T) {
       </nova:flavor>
       <nova:owner>
         <nova:user uuid="f06c4cf1c4e14fda958c73f750049e7b">tenant</nova:user>
-        <nova:project uuid="93ac887ce5794c778320a88c3024b1ad">ssdaW2wp</nova:project>
+        <nova:project uuid="00000000-0000-4000-8000-000000000002">example-project</nova:project>
       </nova:owner>
-      <nova:root type="image" uuid="674e506f-1791-435a-a85f-f983d7c9fef6"/>
+      <nova:root type="image" uuid="00000000-0000-4000-8000-000000000004"/>
     </nova:instance>
   </metadata>
   <memory unit='KiB'>1048576</memory>
@@ -56,8 +56,8 @@ func TestUnmarshal(t *testing.T) {
       <entry name='manufacturer'>RDO</entry>
       <entry name='product'>OpenStack Compute</entry>
       <entry name='version'>15.0.4-1.el7</entry>
-      <entry name='serial'>abfc2417-f63c-48df-a8ca-df3b37bae262</entry>
-      <entry name='uuid'>a6b57d2e-dad0-4860-9104-6eb072935126</entry>
+      <entry name='serial'>00000000-0000-4000-8000-000000000001</entry>
+      <entry name='uuid'>00000000-0000-4000-8000-000000000001</entry>
       <entry name='family'>Virtual Machine</entry>
     </system>
   </sysinfo>
@@ -86,20 +86,20 @@ func TestUnmarshal(t *testing.T) {
     <emulator>/usr/libexec/qemu-kvm</emulator>
     <disk type='block' device='disk'>
       <driver name='qemu' type='raw' cache='none' io='native'/>
-      <source dev='/dev/disk/by-path/ip-10.110.20.107:3260-iscsi-iqn.2010-10.org.openstack:volume-9bdce751-6bd2-495a-abc0-cfedbdfdc8be-lun-0'/>
+      <source dev='/dev/disk/by-path/ip-10.0.0.1:3260-iscsi-iqn.example:volume-00000000-0000-4000-8000-000000000005-lun-0'/>
       <target dev='vda' bus='virtio'/>
-      <serial>9bdce751-6bd2-495a-abc0-cfedbdfdc8be</serial>
+      <serial>00000000-0000-4000-8000-000000000005</serial>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
     </disk>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='none'/>
-      <source file='/var/lib/nova/instances/a6b57d2e-dad0-4860-9104-6eb072935126/disk.swap'/>
+      <source file='/var/lib/nova/instances/00000000-0000-4000-8000-000000000001/disk.swap'/>
       <target dev='vdb' bus='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw' cache='none'/>
-      <source file='/var/lib/nova/instances/a6b57d2e-dad0-4860-9104-6eb072935126/disk.config'/>
+      <source file='/var/lib/nova/instances/00000000-0000-4000-8000-000000000001/disk.config'/>
       <target dev='hda' bus='ide'/>
       <readonly/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
@@ -119,14 +119,14 @@ func TestUnmarshal(t *testing.T) {
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
     </interface>
     <serial type='file'>
-      <source path='/var/lib/nova/instances/a6b57d2e-dad0-4860-9104-6eb072935126/console.log'/>
+      <source path='/var/lib/nova/instances/00000000-0000-4000-8000-000000000001/console.log'/>
       <target port='0'/>
     </serial>
     <serial type='pty'>
       <target port='1'/>
     </serial>
     <console type='file'>
-      <source path='/var/lib/nova/instances/a6b57d2e-dad0-4860-9104-6eb072935126/console.log'/>
+      <source path='/var/lib/nova/instances/00000000-0000-4000-8000-000000000001/console.log'/>
       <target type='serial' port='0'/>
     </console>
     <input type='tablet' bus='usb'>
@@ -134,8 +134,8 @@ func TestUnmarshal(t *testing.T) {
     </input>
     <input type='mouse' bus='ps2'/>
     <input type='keyboard' bus='ps2'/>
-    <graphics type='vnc' port='-1' autoport='yes' listen='10.110.20.107' keymap='en-us'>
-      <listen type='address' address='10.110.20.107'/>
+    <graphics type='vnc' port='-1' autoport='yes' listen='10.0.0.1' keymap='en-us'>
+      <listen type='address' address='10.0.0.1'/>
     </graphics>
     <video>
       <model type='cirrus' vram='16384' heads='1' primary='yes'/>
@@ -156,12 +156,12 @@ func TestUnmarshal(t *testing.T) {
 	if err != nil {
 		fmt.Println(err, r)
 	}
-	assert.Equal(t, "LqnyzNfe", r.Metadata.NovaInstance.Name)
+	assert.Equal(t, "example-vm", r.Metadata.NovaInstance.Name)
 	assert.Equal(t, "c1.micro", r.Metadata.NovaInstance.Flavor.FlavorName)
 	assert.Equal(t, "hvm", r.OSMetadata.Type.Value)
 	assert.Equal(t, "pc-i440fx-rhel7.3.0", r.OSMetadata.Type.Machine)
 	assert.Equal(t, "x86_64", r.OSMetadata.Type.Arch)
-	assert.Equal(t, "a6b57d2e-dad0-4860-9104-6eb072935126", r.InstanceUUID())
+	assert.Equal(t, "00000000-0000-4000-8000-000000000001", r.InstanceUUID())
 	fmt.Printf("xml name=%#v\n", r.Metadata.NovaInstance.XMLName)
 	fmt.Printf("nova name=%#v\n", r.Metadata.NovaInstance.Name)
 	fmt.Printf("nova =%#v\n", r.Metadata)
