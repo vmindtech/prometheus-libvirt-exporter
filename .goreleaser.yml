@@ -22,38 +22,14 @@ builds:
       - -w -s
       - -X main.version={{ .Version }} -X main.commit={{ .Commit }}
     goos:
-      - darwin
-      - freebsd
       - linux
     goarch:
       - amd64
-      - arm
-      - arm64
-      - riscv64
-    goarm:
-      - "5"
-      - "6"
-      - "7"
     ignore:
       - goos: darwin
         goarch: arm
       - goos: darwin
         goarch: riscv64
-
-dockers_v2:
-  - ids:
-      - prometheus-libvirt-exporter
-    dockerfile: goreleaser.dockerfile
-    platforms:
-      - linux/amd64
-      - linux/arm64
-      - linux/riscv64
-    images:
-      - ghcr.io/inovex/{{ .ProjectName }}
-    build_args:
-      BINARY_NAME: "{{ .ProjectName }}"
-    tags:
-      - "v{{ .Version }}"
 
 #Configuration for building packages for apk, deb and rpm package managers
 nfpms:
@@ -62,10 +38,10 @@ nfpms:
     file_name_template: prometheus-libvirt-exporter-{{ .Version }}.{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}
     ids:
       - prometheus-libvirt-exporter
-    maintainer: "inovex"
+    maintainer: "vmindtech"
     description: |
       Prometheus-libvirt-exporter service (host and vm metrics exposed for prometheus, written in Go with pluggable metric collectors)
-    homepage: "https://github.com/inovex/prometheus-libvirt-exporter"
+    homepage: "https://github.com/vmindtech/prometheus-libvirt-exporter"
     license: "MIT License"
     formats:
       - deb
@@ -88,13 +64,7 @@ checksum:
 # Configuration for GitHub Releases
 release:
   github:
-    owner: inovex
+    owner: vmindtech
     name: prometheus-libvirt-exporter
-  footer: |
-    ## Docker Images
-    - ghcr.io/inovex/prometheus-libvirt-exporter:{{ trimprefix .Tag "v" }} (universal, multi-platform)
-    - ghcr.io/inovex/prometheus-libvirt-exporter:{{ trimprefix .Tag "v" }}-amd64
-    - ghcr.io/inovex/prometheus-libvirt-exporter:{{ trimprefix .Tag "v" }}-arm64
-    - ghcr.io/inovex/prometheus-libvirt-exporter:{{ trimprefix .Tag "v" }}-riscv64
   prerelease: auto
   replace_existing_draft: true
