@@ -156,11 +156,12 @@ func TestUnmarshal(t *testing.T) {
 	if err != nil {
 		fmt.Println(err, r)
 	}
-	assert.Equal(nil, r.Metadata.NovaInstance.Name, "LqnyzNfe")
-	assert.Equal(nil, r.Metadata.NovaInstance.Flavor.FlavorName, "c1.micro")
-	assert.Equal(nil, r.OSMetadata.Type.Value, "hvm")
-	assert.Equal(nil, r.OSMetadata.Type.Machine, "pc-i440fx-rhel7.3.0")
-	assert.Equal(nil, r.OSMetadata.Type.Arch, "x86_64")
+	assert.Equal(t, "LqnyzNfe", r.Metadata.NovaInstance.Name)
+	assert.Equal(t, "c1.micro", r.Metadata.NovaInstance.Flavor.FlavorName)
+	assert.Equal(t, "hvm", r.OSMetadata.Type.Value)
+	assert.Equal(t, "pc-i440fx-rhel7.3.0", r.OSMetadata.Type.Machine)
+	assert.Equal(t, "x86_64", r.OSMetadata.Type.Arch)
+	assert.Equal(t, "a6b57d2e-dad0-4860-9104-6eb072935126", r.InstanceUUID())
 	fmt.Printf("xml name=%#v\n", r.Metadata.NovaInstance.XMLName)
 	fmt.Printf("nova name=%#v\n", r.Metadata.NovaInstance.Name)
 	fmt.Printf("nova =%#v\n", r.Metadata)

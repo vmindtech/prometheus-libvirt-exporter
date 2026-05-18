@@ -8,6 +8,30 @@ type Domain struct {
 	UUID       string     `xml:"uuid"`
 	Metadata   Metadata   `xml:"metadata"`
 	OSMetadata OSMetadata `xml:"os"`
+	SysInfo    SysInfo    `xml:"sysinfo"`
+}
+
+// InstanceUUID returns the OpenStack instance UUID from SMBIOS sysinfo, falling back to the domain UUID.
+func (d Domain) InstanceUUID() string {
+	for _, entry := range d.SysInfo.System.Entries {
+		if entry.Name == "uuid" && entry.Value != "" {
+			return entry.Value
+		}
+	}
+	return d.UUID
+}
+
+type SysInfo struct {
+	System SysInfoSystem `xml:"system"`
+}
+
+type SysInfoSystem struct {
+	Entries []SysInfoEntry `xml:"entry"`
+}
+
+type SysInfoEntry struct {
+	Name  string `xml:"name,attr"`
+	Value string `xml:",chardata"`
 }
 
 type Metadata struct {
