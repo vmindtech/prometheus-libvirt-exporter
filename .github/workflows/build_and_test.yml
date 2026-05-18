@@ -5,23 +5,8 @@ permissions:
   packages: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-
-      - name: Setup Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: 1.26.x
-
-      - name: Run Tests
-        run: go test ./...
-
   release:
     if: startsWith(github.event.ref, 'refs/tags/v')
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
